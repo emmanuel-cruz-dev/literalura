@@ -1,5 +1,6 @@
 package com.alura.literalura.principal;
 
+import com.alura.literalura.model.Datos;
 import com.alura.literalura.service.ConsumoAPI;
 import com.alura.literalura.service.ConvierteDatos;
 
@@ -11,5 +12,7 @@ public class Principal {
     public void muestraElMenu(){
         var json = consumoAPI.obtenerDatos(URL_BASE);
         System.out.println(json);
+        var datos = conversor.obtenerDatos(json, Datos.class);
+        System.out.println(datos);
     }
 }
