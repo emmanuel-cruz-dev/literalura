@@ -32,6 +32,7 @@ public class Principal {
         while (selectedOption != 0){
             System.out.println(menuList);
             selectedOption = keyboard.nextInt();
+            keyboard.nextLine();
 
             switch (selectedOption){
                 case 1:
@@ -53,33 +54,45 @@ public class Principal {
                     System.out.println("Saliendo del programa.");
                     break;
                 default:
-                    System.out.println("Opción inválida");
+                    System.out.println("Opción inválida.");
             }
         }
     }
 
-    private void listRegisteredAuthors() {
-        System.out.println("Lista de autores registrados");
-        return;
-    }
-
     private void searchBooksTitle() {
-        System.out.println("Ingrese el nombre del libro que desea buscar");
+        System.out.println("Opción: 1 - Ingrese el nombre del libro que desea buscar");
+        var tituloLibro = keyboard.nextLine();
+        var json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
+        var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
+        Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
+                .filter(l -> l.titulo().toLowerCase().contains(tituloLibro.toLowerCase()))
+                .findFirst();
+        if(libroBuscado.isPresent()){
+            System.out.println("Libro encontrado");
+            System.out.println(libroBuscado.get());
+        } else {
+            System.out.println("Libro no encontrado");
+        }
         return;
     }
 
     private void listRegisteredBooks() {
-        System.out.println("Lista de libros registrados");
+        System.out.println("Opción: 2 - Lista de libros registrados");
+        return;
+    }
+
+    private void listRegisteredAuthors() {
+        System.out.println("Opción: 3 - Lista de autores registrados");
         return;
     }
 
     private void listLivingAuthorsByYear() {
-        System.out.println("Lista de autores vivos en un determinado año");
+        System.out.println("Opción: 4 - Lista de autores vivos en un determinado año");
         return;
     }
 
     private void listBooksByLanguage(){
-        System.out.println("Lista de libros por idioma");
+        System.out.println("Opción 5 - Lista de libros por idioma");
         return;
     }
 
