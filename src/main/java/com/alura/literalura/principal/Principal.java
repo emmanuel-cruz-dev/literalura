@@ -15,7 +15,73 @@ public class Principal {
     private static final String URL_BASE = "https://gutendex.com/books/";
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConvierteDatos conversor = new ConvierteDatos();
-    private Scanner teclado = new Scanner(System.in);
+    private Scanner keyboard = new Scanner(System.in);
+    public int selectedOption = 8;
+    public String menuList = """
+            Elija la opción a través de su número:
+            1 - Buscar libro por título
+            2 - Listar libros registrados
+            3 - Listar autores registrados
+            4 - Listar autores vivos en un determinado año
+            5 - Listar libros por idioma
+            0 - Salir
+            """;
+
+    public void showsMenu(){
+
+        while (selectedOption != 0){
+            System.out.println(menuList);
+            selectedOption = keyboard.nextInt();
+
+            switch (selectedOption){
+                case 1:
+                    searchBooksTitle();
+                    break;
+                case 2:
+                    listRegisteredBooks();
+                    break;
+                case 3:
+                    listRegisteredAuthors();
+                    break;
+                case 4:
+                    listLivingAuthorsByYear();
+                    break;
+                case 5:
+                    listBooksByLanguage();
+                    break;
+                case 0:
+                    System.out.println("Saliendo del programa.");
+                    break;
+                default:
+                    System.out.println("Opción inválida");
+            }
+        }
+    }
+
+    private void listRegisteredAuthors() {
+        System.out.println("Lista de autores registrados");
+        return;
+    }
+
+    private void searchBooksTitle() {
+        System.out.println("Ingrese el nombre del libro que desea buscar");
+        return;
+    }
+
+    private void listRegisteredBooks() {
+        System.out.println("Lista de libros registrados");
+        return;
+    }
+
+    private void listLivingAuthorsByYear() {
+        System.out.println("Lista de autores vivos en un determinado año");
+        return;
+    }
+
+    private void listBooksByLanguage(){
+        System.out.println("Lista de libros por idioma");
+        return;
+    }
 
     public void muestraElMenu(){
         var json = consumoAPI.obtenerDatos(URL_BASE);
@@ -33,7 +99,7 @@ public class Principal {
 
         // Búsqueda de libros por nombre
         System.out.println("Ingresa el nombre del libro que deseas buscar");
-        var tituloLibro = teclado.nextLine();
+        var tituloLibro = keyboard.nextLine();
         json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
         var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
         Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
