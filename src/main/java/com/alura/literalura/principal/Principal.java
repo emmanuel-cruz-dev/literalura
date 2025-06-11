@@ -18,6 +18,7 @@ public class Principal {
     private Scanner keyboard = new Scanner(System.in);
     public int selectedOption = 8;
     public String menuList = """
+            ------------
             Elija la opción a través de su número:
             1 - Buscar libro por título
             2 - Listar libros registrados
@@ -68,8 +69,12 @@ public class Principal {
                 .filter(l -> l.titulo().toLowerCase().contains(tituloLibro.toLowerCase()))
                 .findFirst();
         if(libroBuscado.isPresent()){
-            System.out.println("Libro encontrado");
-            System.out.println(libroBuscado.get());
+            System.out.println("---- LIBRO ----");
+            // System.out.println(libroBuscado.get());
+            libroBuscado.stream().forEach(l ->
+                    System.out.printf("Título: %s\nAutor: %s\nIdioma: %s\nNúmero de descargas: %s\n",
+                            l.titulo(), l.autor(), l.idiomas() ,l.numeroDeDescargas()));
+            System.out.println("---------------\n");
         } else {
             System.out.println("Libro no encontrado");
         }
