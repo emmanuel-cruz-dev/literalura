@@ -1,6 +1,7 @@
 package com.alura.literalura.principal;
 
 import com.alura.literalura.model.Datos;
+import com.alura.literalura.model.DatosAutor;
 import com.alura.literalura.model.DatosLibros;
 import com.alura.literalura.service.ConsumoAPI;
 import com.alura.literalura.service.ConvierteDatos;
@@ -68,12 +69,22 @@ public class Principal {
         Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
                 .filter(l -> l.titulo().toLowerCase().contains(tituloLibro.toLowerCase()))
                 .findFirst();
+
         if(libroBuscado.isPresent()){
             System.out.println("---- LIBRO ----");
             // System.out.println(libroBuscado.get());
-            libroBuscado.stream().forEach(l ->
+            libroBuscado.stream().forEach(l ->{
+                    String author = l.autor().isEmpty() ? "Autor desconocido" :
+                            l.autor().stream()
+                                            .map(DatosAutor::nombre)
+                                                    .collect(Collectors.joining(", "));
+
+                    String languages = l.idiomas().isEmpty() ? "Idioma desconocido" :
+                            String.join(", ", l.idiomas());
+
                     System.out.printf("Título: %s\nAutor: %s\nIdioma: %s\nNúmero de descargas: %s\n",
-                            l.titulo(), l.autor(), l.idiomas() ,l.numeroDeDescargas()));
+                            l.titulo(), author, languages ,l.numeroDeDescargas());
+            });
             System.out.println("---------------\n");
         } else {
             System.out.println("Libro no encontrado");
