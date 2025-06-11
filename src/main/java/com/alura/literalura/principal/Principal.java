@@ -72,7 +72,6 @@ public class Principal {
 
         if(libroBuscado.isPresent()){
             System.out.println("---- LIBRO ----");
-            // System.out.println(libroBuscado.get());
             libroBuscado.stream().forEach(l ->{
                     String author = l.autor().isEmpty() ? "Autor desconocido" :
                             l.autor().stream()
