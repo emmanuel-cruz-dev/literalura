@@ -2,6 +2,7 @@ package com.alura.literalura.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,15 +17,22 @@ public class Libro {
     @Column(unique = true)
     private String titulo;
 
-    @Column(name = "idLibro", unique = true)
+    @Column(name = "id_libro", unique = true)
     private Integer idLibro;
 
     @Column(name = "idiomas")
-    private List<String> idiomas;
+    private List<String> idiomas = new ArrayList<>();
+
+    @Column(name = "numero_de_descargas")
     private Integer numeroDeDescargas;
 
-    @OneToOne(mappedBy = "libros", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Autor autores;
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "libro_autor",
+            joinColumns = @JoinColumn(name = "libro_id"),
+            inverseJoinColumns = @JoinColumn(name = "autor_id")
+    )
+    private List<Autor> autores = new ArrayList<>();
 
     public Libro(){}
 
@@ -34,13 +42,13 @@ public class Libro {
         this.numeroDeDescargas = libroDatos.numeroDeDescargas();
 
         if(!libroDatos.idiomas().isEmpty()) {
-            this.idiomas = libroDatos.idiomas();
+            this.idiomas = new ArrayList<>(libroDatos.idiomas());
         }
 
         if(!libroDatos.autores().isEmpty()) {
-            for(DatosAutor autorDatos : libroDatos.autores()) {
-                this.autores = new Autor(autorDatos);
-                break;
+            this.autores = new ArrayList<>();
+            for (DatosAutor autorDatos : libroDatos.autores()){
+                this.autores.add(new Autor(autorDatos));
             }
         }
     }
@@ -93,24 +101,33 @@ public class Libro {
         this.numeroDeDescargas = descargas;
     }
 
-    public Autor getAutores() {
+    public List<Autor> getAutores() {
         return autores;
     }
 
-    public void setAutores(Autor autores) {
+    public void setAutores(List<Autor> autores) {
         this.autores = autores;
+    }
+
+    public String getNombresAutores() {
+        if (autores == null || autores.isEmpty()) {
+            return "Sin autor";
+        }
+        return autores.stream()
+                .map(Autor::getNombre)
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("Sin autor");
     }
 
     @Override
     public String toString() {
         return """
-            📖 Libro
-            ─────────────────────────────────────────────
-            ID:           %d
-            Título:       %s
-            Autor(es):   %s
-            Idioma(s):    %s
-            Descargas:   %d
+            Libro
+            ID: %d
+            Título: %s
+            Autor(es): %s
+            Idioma(s): %s
+            Descargas: %d
             """.formatted(idLibro, titulo, autores, idiomas, numeroDeDescargas);
     }
 }
