@@ -19,11 +19,11 @@ LiterAlura es una aplicación de consola desarrollada en Java que permite gestio
 ## ✨ Menú del Sistema
 Al ejecutar la aplicación, se presenta un menú interactivo con las siguientes opciones:
 
-- Buscar libro por título - Busca libros en la API externa y los guarda en la base de datos.
-- Listar libros registrados - Muestra todos los libros almacenados localmente.
-- Listar autores registrados - Lista todos los autores en la base de datos.
-- Listar autores vivos en un determinado año - Filtra autores que estaban vivos en un año específico.
-- Listar libros por idioma - Muestra libros filtrados por código de idioma (en, es, fr, pt, etc.).
+- **Buscar libro por título** - Busca libros en la API externa y los guarda en la base de datos.
+- **Listar libros registrados** - Muestra todos los libros almacenados localmente.
+- **Listar autores registrados** - Lista todos los autores en la base de datos.
+- **Listar autores vivos en un determinado año** - Filtra autores que estaban vivos en un año específico.
+- **Listar libros por idioma** - Muestra libros filtrados por código de idioma (en, es, fr, pt).
 
 ## 🌐 API Utilizada
 Este proyecto utiliza [Gutendex](https://gutendex.com/) para obtener y manejar una lista de libros.
