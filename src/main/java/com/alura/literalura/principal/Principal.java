@@ -9,6 +9,7 @@ import com.alura.literalura.service.ConsumoAPI;
 import com.alura.literalura.service.ConvierteDatos;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Principal {
     private LibroRepository libroRepository;
@@ -90,13 +91,24 @@ public class Principal {
         if (datos != null) {
             Libro libro = new Libro(datos.resultados().get(0));
 
+            List<Autor> autoresFinales = new ArrayList<>();
+            for (Autor autorNuevo : libro.getAutores()) {
+                Optional<Autor> autorExistente = autorRepository.findByNombreContainingIgnoreCase(autorNuevo.getNombre());
+                if (autorExistente.isPresent()) {
+                    autoresFinales.add(autorExistente.get());
+                } else {
+                    autoresFinales.add(autorNuevo);
+                }
+            }
+            libro.setAutores(autoresFinales);
+
             if (libroRepository.findByTituloContainingIgnoreCase(libro.getTitulo()).isPresent()) {
                 System.out.println("No se puede registrar el mismo libro más de una vez.");
             } else {
                 libro = libroRepository.save(libro);
                 System.out.println("---- LIBRO ----");
                 System.out.println("Título : " + libro.getTitulo());
-                System.out.println("Autor: " + libro.getAutores());
+                System.out.println("Autor: " + libro.getNombresAutores());
                 System.out.println("Idioma: " + libro.getIdiomas());
                 System.out.println("Número de descargas: " + libro.getDescargas());
                 System.out.println("------------");
@@ -106,7 +118,7 @@ public class Principal {
 
     private void buscarLibrosRegistrados() {
         List<Libro> libros = libroRepository.findAll();
-        System.out.println("Lista de libros");
+        System.out.println("\nLista de libros registrados");
         if (libros.isEmpty()) {
             System.out.println("No hay libros registrados.");
             return;
@@ -134,7 +146,7 @@ public class Principal {
             System.out.println("Autor: " + autor.getNombre());
             System.out.println("Fecha de nacimiento: " + (autor.getNacimiento() != null ? autor.getNacimiento() : "Desconocido"));
             System.out.println("Fecha de fallecimiento: " + (autor.getFallecimiento() != null ? autor.getFallecimiento() : "Desconocido"));
-            System.out.println("Libros: " + autor.getLibros().getTitulo() + "\n");
+            System.out.println("Libros: " + autor.getLibros().stream().map(Libro::getTitulo).collect(Collectors.joining(", ")) + "\n");
         }
     }
 
@@ -145,7 +157,7 @@ public class Principal {
 
         List<Autor> autores = autorRepository.findForYear(fecha);
 
-        System.out.println("Lista de autores");
+        System.out.println("\nLista de autores vivos en: " + fecha);
 
         if (autores.isEmpty()) {
             System.out.println("No hay autores registrados.");
@@ -156,7 +168,7 @@ public class Principal {
             System.out.println("Autor: " + autor.getNombre());
             System.out.println("Fecha de nacimiento: " + (autor.getNacimiento() != null ? autor.getNacimiento() : "Desconocido"));
             System.out.println("Fecha de fallecimiento: " + (autor.getFallecimiento() != null ? autor.getFallecimiento() : "Desconocido"));
-            System.out.println("Libros: " + autor.getLibros().getTitulo() + "\n");
+            System.out.println("Libros: " + autor.getLibros().stream().map(Libro::getTitulo).collect(Collectors.joining(", ")) + "\n");
         }
     }
 
