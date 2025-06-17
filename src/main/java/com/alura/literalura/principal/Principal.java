@@ -64,7 +64,7 @@ public class Principal {
                     System.out.println("Saliendo del programa.");
                     break;
                 default:
-                    System.out.println("Opción incorrecta...");
+                    System.out.println("Opción inválida.");
 
             }
         }
@@ -91,10 +91,15 @@ public class Principal {
             Libro libro = new Libro(datos.resultados().get(0));
 
             if (libroRepository.findByTituloContainingIgnoreCase(libro.getTitulo()).isPresent()) {
-                System.out.println("El Libro ya se encuentra registrado");
+                System.out.println("No se puede registrar el mismo libro más de una vez.");
             } else {
                 libro = libroRepository.save(libro);
-                System.out.println("Libro nuevo agregado 📚 : " + libro.getTitulo());
+                System.out.println("---- LIBRO ----");
+                System.out.println("Título : " + libro.getTitulo());
+                System.out.println("Autor: " + libro.getAutores());
+                System.out.println("Idioma: " + libro.getIdiomas());
+                System.out.println("Número de descargas: " + libro.getDescargas());
+                System.out.println("------------");
             }
         }
     }
@@ -103,7 +108,7 @@ public class Principal {
         List<Libro> libros = libroRepository.findAll();
         System.out.println("Lista de libros");
         if (libros.isEmpty()) {
-            System.out.println("❗ No hay libros registrados.");
+            System.out.println("No hay libros registrados.");
             return;
         }
 
@@ -121,7 +126,7 @@ public class Principal {
         List<Autor> autores = autorRepository.findAll();
 
         if (autores.isEmpty()) {
-            System.out.println("❗No hay autores registrados.");
+            System.out.println("No hay autores registrados.");
             return;
         }
 
@@ -143,7 +148,7 @@ public class Principal {
         System.out.println("Lista de autores");
 
         if (autores.isEmpty()) {
-            System.out.println("❗No hay autores registrados.");
+            System.out.println("No hay autores registrados.");
             return;
         }
 
@@ -165,7 +170,7 @@ public class Principal {
                     2 - Inglés (en).
                     3 - Francés (fr).
                     4 - Portugués (pt).
-                    0 - Salir de la búsqueda.
+                    0 - Salir de la búsqueda por idioma.
                     """;
 
             System.out.println(menuIdioma);
