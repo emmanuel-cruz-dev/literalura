@@ -2,25 +2,23 @@ package com.alura.literalura.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "autores")
 public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+
     @Column(unique = true)
     private String nombre;
     private  Integer anioNacimiento;
     private Integer anioFallecimiento;
 
-    @OneToOne
-    @JoinTable(
-            name = "libros",
-            joinColumns = @JoinColumn(name = "autores_id"),
-            inverseJoinColumns = @JoinColumn(name = "Id")
-    )
-
-    private Libro libros;
+    @ManyToMany(mappedBy = "autores", fetch = FetchType.EAGER)
+    private List<Libro> libros = new ArrayList<>();
 
     public Autor(){}
 
@@ -38,6 +36,10 @@ public class Autor {
         } else {
             this.anioFallecimiento = autores.anioFallecimiento();
         }
+    }
+
+    public Autor(String nombre){
+        this.nombre = nombre;
     }
 
     public Long getId() {
@@ -72,16 +74,16 @@ public class Autor {
         this.anioFallecimiento = fallecimiento;
     }
 
-    @Override
-    public String toString(){
-        return nombre;
-    }
-
-    public Libro getLibros() {
+    public List<Libro> getLibros() {
         return libros;
     }
 
-    public void setLibros(Libro libros) {
+    public void setLibros(List<Libro> libros) {
         this.libros = libros;
+    }
+
+    @Override
+    public String toString(){
+        return nombre;
     }
 }
